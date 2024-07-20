@@ -1,0 +1,22 @@
+{
+    "name": "@repo/db",
+    "version": "0.0.0",
+    "scripts": {
+        "build": "prisma generate"
+      },
+    "dependencies": {
+        "@prisma/client": "^5.17.0"
+    },
+    "devDependencies": {
+        "prisma": "^5.17.0"
+    },
+ 
+    "exports": {
+        "./client": "./src/index.ts",
+        "./OnRampStatus": "./src/index2.ts",
+        "./money": "./src/index3.ts"
+    },
+    "prisma": {
+        "seed": "ts-node prisma/seed.ts"
+    }
+}
