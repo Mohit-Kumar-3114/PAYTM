@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "prisma": "^3.0.0",
     "@prisma/client": "^5.17.0",
     "@repo/db": "*",
     "@repo/store": "*",
