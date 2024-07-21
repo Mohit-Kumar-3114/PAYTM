@@ -14,13 +14,11 @@ export function SendCard() {
         try {
             await p2pTransferBackend(number, Number(amount) * 100);
             alert("Money sent successfully!");
-            setNumber("");
-            setAmount("");
         } catch (error) {
             alert("An unexpected error occurred. Please try again later");
-            setNumber("");
-            setAmount("");
         }
+        setNumber("");
+        setAmount("");
     };
 
     return (
