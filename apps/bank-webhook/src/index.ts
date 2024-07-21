@@ -4,6 +4,7 @@ import db from "@repo/db/client";
 const app = express();
 app.use(express.json());
 
+
 const processWebhook = async (req: Request, res: Response, webhookType: string) => {
     const paymentInformation = {
         token: req.body.token,
@@ -22,41 +23,20 @@ const processWebhook = async (req: Request, res: Response, webhookType: string) 
             });
         }
 
-        const userId = Number(paymentInformation.userId);
-        const amount = Number(paymentInformation.amount);
-
-        await db.$transaction(async (prisma) => {
-            // Check if balance entry exists
-            const userBalance = await prisma.balance.findUnique({
-                where: { userId }
-            });
-
-            if (!userBalance) {
-                // Create balance entry if it does not exist
-                await prisma.balance.create({
-                    data: {
-                        userId,
-                        amount: 0,
-                        locked: 0
-                    }
-                });
-            }
-
-            // Update balance and transaction status
-            await prisma.balance.update({
-                where: { userId },
+        await db.$transaction([
+            db.balance.updateMany({
+                where: { userId: Number(paymentInformation.userId) },
                 data: {
                     amount: {
-                        increment: amount
+                        increment: Number(paymentInformation.amount)
                     }
                 }
-            });
-
-            await prisma.onRampTransaction.update({
+            }),
+            db.onRampTransaction.updateMany({
                 where: { token: paymentInformation.token },
                 data: { status: "Success" }
-            });
-        });
+            })
+        ]);
 
         res.json({ message: "Captured" });
     } catch (e) {
@@ -64,6 +44,7 @@ const processWebhook = async (req: Request, res: Response, webhookType: string) 
         res.status(500).json({ message: `Error while processing ${webhookType} webhook` });
     }
 };
+
 
 app.post("/hdfcWebhook", async (req: Request, res: Response) => {
     await processWebhook(req, res, "HDFC");
