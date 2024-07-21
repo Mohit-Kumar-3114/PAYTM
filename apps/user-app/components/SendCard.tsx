@@ -17,7 +17,7 @@ export function SendCard() {
             setNumber("");
             setAmount("");
         } catch (error) {
-            alert(error);
+            alert("An unexpected error occurred. Please try again later");
             setNumber("");
             setAmount("");
         }
