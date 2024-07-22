@@ -16,7 +16,7 @@ const animationStyles = `
     position: absolute;
     width: 100%;
     text-align: center;
-    font-size: 3rem;
+    font-size: 2rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -39,7 +39,7 @@ export default function Dashboard() {
                 setCurrentMessage((prev) => (prev + 1) % messages.length);
                 setIsVisible(true);
             }, 3000); 
-        }, 1500); 
+        }, 3000); 
 
         return () => clearInterval(interval);
     }, []);
@@ -64,7 +64,7 @@ export default function Dashboard() {
             </div>
             <div className=" pt-4 w-full flex justify-center">
                 <style>{animationStyles}</style>
-                <div className={`message ${!isVisible ? 'hidden' : ''}`}>
+                <div className={`message ${!isVisible ? 'hidden' : ''}` } w-full justify-center>
                     {messages[currentMessage]}
                 </div>
             </div>
