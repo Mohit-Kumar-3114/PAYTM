@@ -4,7 +4,7 @@ export default function() {
     Dashboard
    </div>
    <div className="w-full flex justify-center">
-   <img src="https://st5.depositphotos.com/86100912/72623/i/450/depositphotos_726232036-stock-photo-paytm-logo-displayed-smartphone-screen.jpg"></img>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/H0hYm-C9pW8?si=NyKFBtofjC_2lMrz" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ></iframe>
     </div>
    </div>
 }
