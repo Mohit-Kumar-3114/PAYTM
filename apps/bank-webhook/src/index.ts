@@ -1,16 +1,24 @@
 import express, { Request, Response } from "express";
 import db from "@repo/db/client";
+import { z } from "zod";
 
 const app = express();
 app.use(express.json());
 
+const webhookSchema = z.object({
+    token: z.string(),
+    user_identifier: z.number().int(),
+    amount: z.number().int()
+});
 
 const processWebhook = async (req: Request, res: Response, webhookType: string) => {
-    const paymentInformation = {
-        token: req.body.token,
-        userId: req.body.user_identifier,
-        amount: req.body.amount
-    };
+    const parseResult = webhookSchema.safeParse(req.body);
+
+    if (!parseResult.success) {
+        return res.status(400).json({ message: "Invalid payload", errors: parseResult.error.errors });
+    }
+
+    const paymentInformation = parseResult.data;
 
     try {
         const existingTransaction = await db.onRampTransaction.findUnique({
@@ -23,12 +31,20 @@ const processWebhook = async (req: Request, res: Response, webhookType: string) 
             });
         }
 
+        if (!existingTransaction || 
+            existingTransaction.userId !== paymentInformation.user_identifier || 
+            existingTransaction.amount !== paymentInformation.amount) {
+            return res.status(400).json({
+                message: "Invalid transaction details"
+            });
+        }
+
         await db.$transaction([
             db.balance.updateMany({
-                where: { userId: Number(paymentInformation.userId) },
+                where: { userId: paymentInformation.user_identifier },
                 data: {
                     amount: {
-                        increment: Number(paymentInformation.amount)
+                        increment: paymentInformation.amount
                     }
                 }
             }),
@@ -44,7 +60,6 @@ const processWebhook = async (req: Request, res: Response, webhookType: string) 
         res.status(500).json({ message: `Error while processing ${webhookType} webhook` });
     }
 };
-
 
 app.post("/hdfcWebhook", async (req: Request, res: Response) => {
     await processWebhook(req, res, "HDFC");
@@ -66,4 +81,3 @@ const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
