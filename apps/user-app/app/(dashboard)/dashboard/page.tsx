@@ -1,6 +1,5 @@
+"use client"
 import React, { useState, useEffect } from 'react';
-
-
 const animationStyles = `
 @keyframes fadeIn {
     from { opacity: 0; }
