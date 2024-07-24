@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:generate": "cd packages/db && npx prisma generate && cd ../..",
     "start-user-app": "cd ./apps/user-app && npm run dev && cd ../..",
-    "start-bank-webhook": "cd ./apps/bank-webhook && npm run dev"
+     "start-bank-webhook": "cd ./apps/bank-webhook && npm run dev && cd../.."
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
