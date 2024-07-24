@@ -1,6 +1,7 @@
 import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { Prisma } from '@prisma/client';
 
 export const authOptions = {
   providers: [
@@ -11,7 +12,7 @@ export const authOptions = {
         password: { label: "Password", type: "password", required: true }
       },
 
-      async authorize(credentials: any) {
+      async authorize(credentials:any) {
         const existingUser = await db.user.findFirst({
           where: {
             number: credentials.phone
@@ -34,7 +35,7 @@ export const authOptions = {
           const hashedPassword = await bcrypt.hash(credentials.password, 10);
 
           // Use a transaction to ensure both operations succeed or fail together
-          const result = await db.$transaction(async (prisma) => {
+          const result = await db.$transaction(async (prisma: Prisma.TransactionClient) => {
             // Create a new user
             const user = await prisma.user.create({
               data: {
