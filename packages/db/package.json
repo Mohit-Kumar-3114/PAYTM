@@ -1,9 +1,7 @@
 {
     "name": "@repo/db",
     "version": "0.0.0",
-    "scripts": {
-        "build": "prisma generate"
-      },
+ 
     "dependencies": {
         "@prisma/client": "^5.17.0"
     },
