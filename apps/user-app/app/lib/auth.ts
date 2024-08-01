@@ -34,9 +34,9 @@ export const authOptions = {
         try {
           const hashedPassword = await bcrypt.hash(credentials.password, 10);
 
-          // Use a transaction to ensure both operations succeed or fail together
+          
           const result = await db.$transaction(async (prisma: Prisma.TransactionClient) => {
-            // Create a new user
+
             const user = await prisma.user.create({
               data: {
                 number: credentials.phone,
@@ -44,11 +44,11 @@ export const authOptions = {
               }
             });
 
-            // Create an initial balance record for the new user
+       
             await prisma.balance.create({
               data: {
                 userId: user.id,
-                amount: 0, // or set to some initial amount
+                amount: 0, 
                 locked: 0
               }
             });
